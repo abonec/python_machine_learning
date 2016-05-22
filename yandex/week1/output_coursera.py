@@ -6,5 +6,4 @@ def output(file, string):
     path = os.path.join(DIR, file)
     f = open(path, 'w')
     f.write(string)
-    f.write("\n")
     f.close()
