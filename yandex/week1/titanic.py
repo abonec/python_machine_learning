@@ -1,4 +1,5 @@
 import pandas
+import re
 import output_coursera as coursera
 from scipy.stats.stats import pearsonr
 data = pandas.read_csv('titanic.csv', index_col='PassengerId')
@@ -34,6 +35,22 @@ correlation = pearsonr(data['SibSp'], data['Parch'])[0]
 output = "{:.2f}".format(correlation)
 coursera.output('sub_5.txt', output)
 #############################
-names = females['Name'].get_values()
 
-print(names)
+# first_name explanation got here:
+# https://www.kaggle.com/c/titanic/forums/t/2885/a-question-with-the-names/17477
+def process_names(string):
+    mrs_reg = r'(Mrs\.|Miss\.|Dr\.|Ms.|Mlle.|Lady.|Mme.)\s?'
+    name = string.split(", ")[1]
+    name = re.sub(mrs_reg, '', name)
+    if '(' in name and ')' in name:
+        name = re.search(r'\(\"?(.*)\"?\)', name).group(1)
+        name = re.sub(r'(Mrs )', '', name)
+    name = re.sub(r'\"', '', name)
+    name = name.split(" ")[0]
+    # name = [split[1, len(split) - 1]].join(" ")
+    return name.lower()
+names = females['Name'].apply(process_names)
+name = names.value_counts().idxmax().capitalize()
+
+coursera.output('sub_6.txt', name)
+#############################
