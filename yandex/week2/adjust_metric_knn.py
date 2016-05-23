@@ -1,4 +1,3 @@
-import pandas
 import sklearn.datasets
 import numpy as np
 from sklearn.cross_validation import KFold
@@ -8,9 +7,9 @@ from sklearn.neighbors import KNeighborsRegressor
 import output_coursera as coursera
 
 data = sklearn.datasets.load_boston()
-X = pandas.DataFrame(data.data)
-y = pandas.DataFrame(data.target)
-X_scaled = pandas.DataFrame(scale(X))
+X = data.data
+y = data.target
+X_scaled = scale(X)
 
 parameters = np.linspace(start=1, stop=10, num=200)
 best_p = 0
@@ -20,7 +19,6 @@ for p in parameters:
     k_folder = KFold(X_scaled.shape[0], n_folds=5, random_state=42, shuffle=True)
     scores = cross_val_score(clf, X=X_scaled, y=y, scoring='mean_squared_error', cv=k_folder)
     mean = np.mean(scores)
-    print(scores)
     if mean > best_score:
         best_p = p
         best_score = mean
