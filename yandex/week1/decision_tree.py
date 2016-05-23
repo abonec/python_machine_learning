@@ -1,4 +1,3 @@
-import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 import pandas
 import output_coursera as coursera
