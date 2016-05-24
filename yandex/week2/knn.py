@@ -27,8 +27,8 @@ def get_scores(folder, X_eval, y_eval):
     return result_k, result_score
 
 data = pandas.read_csv('wine.data')
-X = data.iloc[:, 1:len(data.columns)]
-y = data.iloc[:, 0:1]
+X = data[data.columns[1:]]
+y = data[data.columns[0]]
 k_folder = KFold(X.shape[0], n_folds=5, random_state=42, shuffle=True)
 ####################################
 best_k, best_score = get_scores(folder=k_folder, X_eval=X, y_eval=y)
