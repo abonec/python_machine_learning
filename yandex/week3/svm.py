@@ -7,7 +7,7 @@ X = data[data.columns[1:]]
 y = data[data.columns[0]]
 
 clf = SVC(C=100000, kernel='linear', random_state=241)
-clf.fit(X,y)
+clf.fit(X, y)
 
 result = clf.support_ + 1
 
