@@ -38,7 +38,7 @@ class LogisticRegression:
                 break
 
     def predict(self, x1, x2):
-        return 1 / (1 + math.exp( -self.w1 * x1 - self.w2 * x2))
+        return 1 / (1 + math.exp(-self.w1 * x1 - self.w2 * x2))
 
     def roc_auc_score(self, X, y):
         predicted = []
