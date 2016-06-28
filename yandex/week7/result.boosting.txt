@@ -1,0 +1,21 @@
+time python final_boosting.py
+first_blood_time               missing 19553 of 97230
+first_blood_team               missing 19553 of 97230
+first_blood_player1            missing 19553 of 97230
+first_blood_player2            missing 43987 of 97230
+radiant_bottle_time            missing 15691 of 97230
+radiant_courier_time             missing 692 of 97230
+radiant_flying_courier_time    missing 27479 of 97230
+radiant_first_ward_time         missing 1836 of 97230
+dire_bottle_time               missing 16143 of 97230
+dire_courier_time                missing 676 of 97230
+dire_flying_courier_time       missing 26098 of 97230
+dire_first_ward_time            missing 1826 of 97230
+dtype: object
+for 10 trees mean score has been 0.6648747858024405 and time elapsed 0:00:18.956558
+for 20 trees mean score has been 0.6829122907866594 and time elapsed 0:00:34.842249
+for 30 trees mean score has been 0.6888040604092993 and time elapsed 0:00:50.394023
+for 50 trees mean score has been 0.6972282599321541 and time elapsed 0:01:23.784195
+for 150 trees mean score has been 0.7104706499154689 and time elapsed 0:04:53.119713
+for 300 trees mean score has been 0.7171839219255938 and time elapsed 0:09:26.400602
+best score was for 300 forest size: 0.7171839219255938
