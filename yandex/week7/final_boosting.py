@@ -4,6 +4,8 @@ import datetime
 from sklearn.cross_validation import KFold
 from sklearn.cross_validation import cross_val_score
 from sklearn.ensemble.gradient_boosting import GradientBoostingClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
 
 features_set = pandas.read_csv('features.csv')
 X = features_set.drop(['duration', 'radiant_win', 'tower_status_radiant', 'tower_status_dire', 'barracks_status_radiant', 'barracks_status_dire'], axis=1)
@@ -37,5 +39,10 @@ for forest_size in [10, 20, 30, 50, 150, 300]:
         size = forest_size
 
 print("best score was for {} forest size: {}".format(size, score))
+
+clf = LogisticRegression(penalty='l2')
+k_folder = KFold(X.shape[0], n_folds=5, shuffle=True)
+scores = cross_val_score(clf, X=X, y=y, cv=k_folder, scoring='roc_auc')
+print(scores)
 
 
