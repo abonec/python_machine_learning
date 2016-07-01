@@ -28,6 +28,7 @@ X = X.fillna(0)
 size = 0
 score = 0
 for forest_size in [10, 20, 30, 50, 150, 300]:
+    # break
     start_time = datetime.datetime.now()
     clf = GradientBoostingClassifier(n_estimators=forest_size)
     k_folder = KFold(X.shape[0], n_folds=5, shuffle=True)
@@ -40,9 +41,12 @@ for forest_size in [10, 20, 30, 50, 150, 300]:
 
 print("best score was for {} forest size: {}".format(size, score))
 
-clf = LogisticRegression(penalty='l2')
-k_folder = KFold(X.shape[0], n_folds=5, shuffle=True)
-scores = cross_val_score(clf, X=X, y=y, cv=k_folder, scoring='roc_auc')
-print(scores)
+def train_logistic(features, target):
+    clf = LogisticRegression(penalty='l2')
+    k_folder = KFold(features.shape[0], n_folds=5, shuffle=True)
+    start_time = datetime.datetime.now()
+    score = cross_val_score(clf, X=features, y=target, cv=k_folder, scoring='roc_auc').mean()
+    print("score {} given bey logistic regression in {}".format(score, datetime.datetime.now() - start_time))
 
+train_logistic(X, y)
 
