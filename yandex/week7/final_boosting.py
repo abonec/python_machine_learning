@@ -74,15 +74,22 @@ hero_ids = np.unique(hero_ids)
 unique_names = len(hero_ids)
 print("there is {} unique heroes".format(unique_names))
 
-X_pick = np.zeros((features.shape[0], 112))
+def inject_bag_of_words(X, features):
+    X_pick = np.zeros((features.shape[0], 112))
 
-for i, match_id in enumerate(features.index):
-    for p in range(5):
-        X_pick[i, features.ix[match_id, 'r{}_hero'.format(p+1)]-1] = 1
-        X_pick[i, features.ix[match_id, 'd{}_hero'.format(p+1)]-1] = -1
+    for i, match_id in enumerate(features.index):
+        for p in range(5):
+            X_pick[i, features.ix[match_id, 'r{}_hero'.format(p+1)]-1] = 1
+            X_pick[i, features.ix[match_id, 'd{}_hero'.format(p+1)]-1] = -1
+
+    return np.concatenate([X, X_pick], axis=1)
 
 
-X = np.concatenate([X, X_pick], axis=1)
-
+X = inject_bag_of_words(X, features)
 train_logistic(X, y, 'With Bag of Words')
+
+
+
+
+
 
