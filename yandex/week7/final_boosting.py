@@ -13,9 +13,6 @@ y = features_set[['radiant_win']].values.ravel()
 
 matches_count = len(X)
 
-# Все признаки, которые имеют пропуски, имеют суффикс _time, что говорит о том, что они просто не успели наступить за
-# первые пять минут. Все остальные признаки с пропусками имеют такие же префиксы, что означает, что они с ними связаны и
-# несут уточняющую информацию
 features_data_count = X.count()
 missing = features_data_count[features_data_count < matches_count]
 missing = missing.apply(lambda x: "missing {} of {}".format(matches_count - x, matches_count))
@@ -24,6 +21,8 @@ print(missing)
 
 X = X.fillna(0)
 
+
+# ===================== GradientBoosting ==============================
 
 size = 0
 score = 0
@@ -41,12 +40,28 @@ for forest_size in [10, 20, 30, 50, 150, 300]:
 
 print("best score was for {} forest size: {}".format(size, score))
 
-def train_logistic(features, target):
+# ===================LogisticRegression=================
+features = X
+
+X = StandardScaler().fit_transform(features)
+
+def train_logistic(features, target, label):
     clf = LogisticRegression(penalty='l2')
     k_folder = KFold(features.shape[0], n_folds=5, shuffle=True)
     start_time = datetime.datetime.now()
     score = cross_val_score(clf, X=features, y=target, cv=k_folder, scoring='roc_auc').mean()
-    print("score {} given bey logistic regression in {}".format(score, datetime.datetime.now() - start_time))
+    print("{}: score {} given by logistic regression in {}".format(label, score, datetime.datetime.now() - start_time))
 
-train_logistic(X, y)
+train_logistic(X, y, 'Scaled')
+
+# drop category
+category_features = ['lobby_type']
+for i in range(1, 5+1):
+    category_features.append("r{}_hero".format(i))
+    category_features.append("d{}_hero".format(i))
+
+X = features.drop(category_features, axis=1)
+X = StandardScaler().fit_transform(X)
+
+train_logistic(X, y, 'Drop categorial features')
 
