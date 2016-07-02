@@ -50,10 +50,10 @@ def train_logistic(features, target, label):
     score = cross_val_score(clf, X=features, y=target, cv=k_folder, scoring='roc_auc').mean()
     print("{}: score {} given by logistic regression in {}".format(label, score, datetime.datetime.now() - start_time))
     return clf, scaler
-
+# just scaled:
 train_logistic(X, y, 'Scaled')
 
-# drop category
+# drop categories:
 category_features = ['lobby_type']
 for i in range(1, 5+1):
     category_features.append("r{}_hero".format(i))
@@ -64,6 +64,7 @@ X = X.drop(category_features, axis=1)
 train_logistic(X, y, 'Drop categorial features')
 
 
+# count heroes:
 heros_features = category_features[1:len(category_features)]
 hero_ids = []
 for feature_name in heros_features:
@@ -73,6 +74,9 @@ for feature_name in heros_features:
 hero_ids = np.unique(hero_ids)
 unique_names = len(hero_ids)
 print("there is {} unique heroes".format(unique_names))
+
+
+# inject bag of words:
 
 def inject_bag_of_words(X, features):
     X_pick = np.zeros((features.shape[0], 112))
@@ -87,6 +91,8 @@ def inject_bag_of_words(X, features):
 
 X = inject_bag_of_words(X, features)
 clf, scaler = train_logistic(X, y, 'With Bag of Words')
+
+# final test proba
 clf.fit(scaler.transform(X), y)
 
 
