@@ -27,7 +27,6 @@ X = X.fillna(0)
 size = 0
 score = 0
 for forest_size in [10, 20, 30, 50, 150, 300]:
-    break
     start_time = datetime.datetime.now()
     clf = GradientBoostingClassifier(n_estimators=forest_size)
     k_folder = KFold(X.shape[0], n_folds=5, shuffle=True)
@@ -43,13 +42,14 @@ print("best score was for {} forest size: {}".format(size, score))
 # ===================LogisticRegression=================
 features = X
 def train_logistic(features, target, label):
-    # return
-    features = StandardScaler().fit_transform(features)
+    scaler = StandardScaler()
+    features = scaler.fit_transform(features)
     clf = LogisticRegression(penalty='l2')
     k_folder = KFold(features.shape[0], n_folds=5, shuffle=True)
     start_time = datetime.datetime.now()
     score = cross_val_score(clf, X=features, y=target, cv=k_folder, scoring='roc_auc').mean()
     print("{}: score {} given by logistic regression in {}".format(label, score, datetime.datetime.now() - start_time))
+    return clf, scaler
 
 train_logistic(X, y, 'Scaled')
 
@@ -86,10 +86,20 @@ def inject_bag_of_words(X, features):
 
 
 X = inject_bag_of_words(X, features)
-train_logistic(X, y, 'With Bag of Words')
+clf, scaler = train_logistic(X, y, 'With Bag of Words')
+clf.fit(scaler.transform(X), y)
 
 
+test_features = pandas.read_csv('features_test.csv', index_col='match_id')
 
+X_test = test_features.drop(category_features, axis=1)
+X_test = X_test.fillna(0)
+X_test = inject_bag_of_words(X_test, test_features)
 
+X_test = scaler.transform(X_test)
 
+proba = clf.predict_proba(X_test)[:, 1]
+
+print("Proba min: {}".format(proba.min()))
+print("Proba max: {}".format(proba.max()))
 
